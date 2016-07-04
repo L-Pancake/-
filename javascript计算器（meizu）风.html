@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>javascript计算器(meizu风）</title>
+    <style type="text/css">
+        body{
+            font-family: Arial;
+            color: #585858;
+            background-color:#000;
+            text-align: center;
+        }
+        #calculator{
+            width: 507px;
+            height: 847px;
+            background-color: #F2F2F2;
+            margin: 0px auto;
+            padding: 0px;
+            border:0px;
+        }
+        #calculator-head{
+            height: 32px;
+            width: auto;
+            background-color: #F2F2F1;
+        }
+        #calculator-screen{
+            width: auto;
+            height: 299px;
+            background-color: #F2F2F1;
+        }
+        .screen{
+            width:431px;
+            height:80px;
+            line-height:24px;
+            padding: 180px 38px 0px;
+            border:0px;
+            margin:0 auto;
+            direction:ltr;
+            text-align:right;
+            font-size:80px;
+            color:#484848;
+            background-color: #F2F2F1;
+        }
+        #calculator-button{
+
+            margin: 0px;
+            padding: 0px;
+            width: 507px;
+            height: auto;
+            background-color: #f1f1f1;
+            border-bottom: #E7E9E8 2px solid;
+        }
+        #calculator-button ul{
+            margin: 0px;
+            padding: 0px;
+            overflow: hidden;
+        }
+        .sum{
+            list-style: none;
+            margin: 0px;
+            padding:0px;
+            width: 128px;
+            height: 182px;
+            background-color: #FC7E44;
+            color:#fff ;
+            float: left;
+            line-height: 180px;
+            font-size: 60px;
+        }
+        .border-top{
+            list-style: none;
+            margin: 0px;
+            padding:0px;
+            width: 125px;
+            height: 89px;
+            border-top: #E7E9E8 2px solid;
+            background-color: #fdfdfd;
+            color:#595959 ;
+            float: left;
+            line-height: 90px;
+            font-size: 48px;
+        }
+        .border-top-left{
+            list-style: none;
+            margin: 0px;
+            padding:0px;
+            width: 125px;
+            height: 89px;
+            border-top: #E7E9E8 2px solid;
+            border-left: #E7E9E8 2px solid;
+            background-color: #fdfdfd;
+            color:#595959 ;
+            float: left;
+            line-height: 90px;
+            font-size: 48px;
+        }
+        .sqrt{
+            list-style: none;
+            margin: 0px;
+            padding:0px;
+            width: 125px;
+            height: 89px;
+            border-top: #E7E9E8 2px solid;
+            background-color: #f1f1f1;
+            color:#595959 ;
+            float: left;
+            line-height: 90px;
+            font-size: 48px;
+        }
+        #calculator-foot{
+            margin: 0px;
+            padding:0px;
+            height: 60px;
+            width: auto;
+            background-color:  #f1f1f1;
+        }
+        .border-top:hover{
+            background-color:#f9f9f9;
+            cursor:pointer;
+        }
+        .border-top-left:hover{
+            background-color:#f9f9f9;
+            cursor:pointer;
+        }
+        .sqrt:hover{
+            background-color:#e1e1e1;
+            cursor:pointer;
+        }
+        .sum:hover{
+            background-color:  #FC7a00;
+            cursor:pointer;
+        }
+        .border-top:active{
+            background-color:#e9e9e9;
+            cursor:pointer;
+        }
+        .border-top-left:active{
+            background-color:#E9E9E9;
+            cursor:pointer;
+        }
+        .sqrt:active{
+            background-color:#C1C1C1;
+            cursor:pointer;
+        }
+        .sum:active{
+            background-color:  #FB6a00;
+            cursor:pointer;
+        }
+        #calculator-foot div{
+            float: left;
+            width: 169px;
+            height: 60px;
+        }
+    </style>
+    <script>
+        var num= 0,result= 0,numshow=0;
+        var quit=0;
+        var active=0;
+        var option=0;
+        var temp=0;
+        function command(num){
+            var str=String(document.calculator.numScreen.value);
+            str=(option!=0)?"":str;
+            str=(str!="0")?str:"";
+            str=str+String(num);
+            document.calculator.numScreen.value=str;
+            option=0;
+            quit=0;
+        }
+        function del(){//←
+            var str=String(document.calculator.numScreen.value);
+            str=(str!=0)?str:"";
+            str=str.substr(0,str.length-1);
+            document.calculator.numScreen.value=str;
+        }
+        function divide(){//÷
+            active=1;
+            option=1;
+            copy();
+        }
+        function times(){//×
+            active=2;
+            option=1;
+            copy();
+        }
+        function minus(){//-
+            active=3;
+            option=1;
+          copy();
+        }
+        function plus(){//+
+            active=4;
+            option=1;
+           copy();
+        }
+        function persent(){//%
+            active=5;
+            option=1;
+            copy();
+        }
+        function dot(){//.
+            var str=String(document.calculator.numScreen.value);
+            for(var i=0;i<str.length;i++){
+                if(str[i]=='.'){
+                    return false;
+                }
+            }
+            quit=1;
+            str=(str!="")?str:"0";
+            str=str+".";
+            document.calculator.numScreen.value=str;
+        }
+        function equal(){//=
+            numshow=Number(document.calculator.numScreen.value);
+            if(quit==0&&temp!=0){
+                switch (active){
+                    case 1:if(numshow==0){
+                        document.calculator.numScreen.value="Wrong!";
+                        setTimeout(clearwrong,1000);
+                        return false;
+                    }else{
+                        result=temp/numshow;
+                    } break;
+                    case 2:result=temp*numshow; break;
+                    case 3:result=temp-numshow; break;
+                    case 4:result=temp+numshow; break;
+                    case 5:result=temp%numshow; break;
+                }
+                document.calculator.numScreen.value=String(result);
+                option=0;
+            }
+            quit=1;
+        }
+        function copy(){
+            temp=Number(document.calculator.numScreen.value);
+        }
+        function clearscreen(){//C
+            num=result=numshow=quit=active=option=temp=0;
+            document.calculator.numScreen.value="";
+        }
+        function clearwrong(){
+            document.calculator.numScreen.value="";
+        }
+
+    </script>
+</head>
+<body>
+<div id="calculator">
+    <div id="calculator-head"></div>
+    <form name="calculator" action="" method="get">
+        <div id="calculator-screen">
+            <input type="text" name="numScreen" class="screen" value="" onfocus="this.blur();"  />
+        </div>
+        <div id="calculator-button">
+            <ul>
+                <li class="border-top" onclick="clearscreen()">C</li>
+                <li class="border-top-left" onclick="del()">←</li>
+                <li class="border-top-left" onclick="divide()">÷</li>
+                <li class="border-top-left" onclick="times()">×</li>
+                <li class="border-top" onclick="command(7)">7</li>
+                <li class="border-top-left" onclick="command(8)">8</li>
+                <li class="border-top-left" onclick="command(9)">9</li>
+                <li class="border-top-left" onclick="minus()">-</li>
+                <li class="border-top" onclick="command(4)">4</li>
+                <li class="border-top-left" onclick="command(5)">5</li>
+                <li class="border-top-left" onclick="command(6)">6</li>
+                <li class="border-top-left" onclick="plus()">+</li>
+            </ul>
+            <ul style="width:379px;float: left;">
+                <li class="border-top" onclick="command(1)">1</li>
+                <li class="border-top-left" onclick="command(2)">2</li>
+                <li class="border-top-left" onclick="command(3)">3</li>
+                <li class="border-top" onclick="persent()">%</li>
+                <li class="border-top-left" onclick="command(0)">0</li>
+                <li class="border-top-left" onclick="dot()">.</li>
+            </ul>
+            <ul>
+                <li class="sum" onclick="equal()">=</li>
+            </ul>
+        </div>
+        <div id="calculator-foot">
+            <div id="foot_return" >
+                <div class="foot_return"></div>
+            </div>
+            <div id="foot_home" >
+                <div class="foot_home"></div>
+            </div>
+            <div id="foot_menu">
+                <div class="foot_menu"></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
